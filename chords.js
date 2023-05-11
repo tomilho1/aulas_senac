@@ -83,6 +83,17 @@ function zeroNote(array_x) {
     return array_b
 }
 
+// Inverte acordes
+function nextInversion(array_x) {
+    for (step = 0; step < array_x.length; step++) {
+        if (step !== 1) {
+            array_x[step] = array_x[step] + 12
+        }
+        else { }
+    }
+    return array_x
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Biblioteca
 
@@ -104,17 +115,18 @@ let flat_notes = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Definições
 
-let user_chord = [1, 5, 8, 11]
-const entry_chord = user_chord
+let user_chord = [2, 6, 9]
+
 let sys_chord = formatChord(user_chord)
 intervals = getIntervals(sys_chord)
-
 let chord_index = librarySearch(sys_chord, chordlibrary)
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Logs
 
-console.log("Acorde de entrada", entry_chord)
+console.log("Acorde de entrada", user_chord)
 console.log("Acorde formatado", sys_chord)
 console.log("Intervalos", intervals)
 
