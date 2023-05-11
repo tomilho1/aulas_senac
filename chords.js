@@ -1,3 +1,6 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Funções
+
 // Calcula os intervalos do acorde.
 function getIntervals(array_a) {
     array_b = []
@@ -95,17 +98,25 @@ let chordlibrary =
     [0, 2, 4, 7, 11], [0, 2, 3, 7, 10], [0, 2, 4, 7], [0, 2, 3, 7],
     [0, 4, 7, 10], [0, 2, 4, 7, 10], [0, 1, 4, 7, 10], [0, 5, 7, 10]]
 
+let sharp_notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+let flat_notes = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-// Entrada
+// Definições
 
-let my_chord = [0,4,7]
-console.log("Acorde de entrada", my_chord)
-
-let sys_chord = formatChord(my_chord)
+let user_chord = [1, 5, 8, 11]
+const entry_chord = user_chord
+let sys_chord = formatChord(user_chord)
 intervals = getIntervals(sys_chord)
 
+let chord_index = librarySearch(sys_chord, chordlibrary)
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// Logs
+
+console.log("Acorde de entrada", entry_chord)
 console.log("Acorde formatado", sys_chord)
 console.log("Intervalos", intervals)
 
-console.log("Index do acorde na biblioteca:", librarySearch(sys_chord, chordlibrary))
-console.log("Qualidade:", chordnames[librarySearch(sys_chord, chordlibrary)])
+console.log("Index do acorde na biblioteca:", chord_index)
+console.log("Qualidade:", chordnames[chord_index])
