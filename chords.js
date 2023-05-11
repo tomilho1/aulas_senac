@@ -49,7 +49,7 @@ function librarySearch(array_x, bigarray) {
     return index
 }
 
-// Elimina oitavas.
+// Coloca todas notas dentro de uma oitava.
 function twelvefy(array_x) {
     for (step = 0; step < array_x.length; step++) {
         array_x[step] = array_x[step] % 12
@@ -67,26 +67,45 @@ function formatChord(array_x) {
         }
         else { }
     }
+    return zeroNote(array_b)
+}
+
+// Transforma a primeira nota em zero
+function zeroNote(array_x) {
+    let id_1 = array_x[0]
+    let array_b = array_x
+    for (step = 0; step < array_b.length; step++) {
+        array_b[step] = array_b[step] - id_1
+    }
     return array_b
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Biblioteca
 
-let chordnames = ["major", "minor", "diminished", "augmented", "major seventh"]
-let chordlibrary = [[4, 3], [3, 4], [3, 3], [4, 4], [4, 3, 4]]
+let chordnames =
+    ["maj", "min", "dim", "aug",
+        "maj7", "min7", "sus4", "sus2",
+        "maj9", "min9", "maj(add9)", "min(add9)",
+        "7", "9", "7(b9)", "7sus4"]
+
+let chordlibrary =
+    [[0, 4, 7], [0, 3, 7], [0, 3, 6], [0, 4, 8],
+    [0, 4, 7, 11], [0, 3, 7, 10], [0, 5, 7], [0, 2, 7],
+    [0, 2, 4, 7, 11], [0, 2, 3, 7, 10], [0, 2, 4, 7], [0, 2, 3, 7],
+    [0, 4, 7, 10], [0, 2, 4, 7, 10], [0, 1, 4, 7, 10], [0, 5, 7, 10]]
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-// Entrada //
+// Entrada
 
-let my_chord = [0,7,4,0,12,24]
+let my_chord = [0,4,7]
+console.log("Acorde de entrada", my_chord)
+
 let sys_chord = formatChord(my_chord)
 intervals = getIntervals(sys_chord)
 
-
-
-console.log("Acorde de entrada", my_chord)
-console.log("Acorde formatado", formatChord(my_chord))
+console.log("Acorde formatado", sys_chord)
 console.log("Intervalos", intervals)
-console.log("Index do acorde na biblioteca:", librarySearch(intervals, chordlibrary))
-console.log(chordnames[librarySearch(intervals, chordlibrary)])
+
+console.log("Index do acorde na biblioteca:", librarySearch(sys_chord, chordlibrary))
+console.log("Qualidade:", chordnames[librarySearch(sys_chord, chordlibrary)])
