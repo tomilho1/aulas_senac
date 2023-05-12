@@ -119,23 +119,30 @@ let flat_notes = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Definições
 
-let user_chord = [0, 5, 8]
+let user_chord = [0, 5, 9]
 
 let sys_chord = {}
 sys_chord.values = formatChord(user_chord)
-sys_chord.intervals = getIntervals(sys_chord.values)
-sys_chord.index = librarySearch(sys_chord.values, chordlibrary)
-sys_chord.quality = chordnames[sys_chord.index]
+sys_chord.intervals = function intervals() {return getIntervals(sys_chord.values)}
+sys_chord.index = function index () {return librarySearch(sys_chord.values, chordlibrary)}
+sys_chord.quality = function quality () {return chordnames[sys_chord.index()]}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Logs
 
-if (sys_chord.index !== null) {
+if (sys_chord.index() !== null) {
 console.log("Acorde de entrada:", user_chord)
 console.log("Acorde formatado:", sys_chord.values)
 console.log("Intervalos do acorde:", sys_chord.intervals)
-console.log("Index do acorde:", sys_chord.index)
+console.log("Index do acorde:", sys_chord.index())
 console.log("Qualidade do acorde:", sys_chord.quality)
 } else {
   console.log("Não foi possível identificar acorde")
 }
+
+sys_chord.values = (invertChord(sys_chord.values,1))
+console.log(user_chord)
+console.log(sys_chord.values)
+console.log(sys_chord.intervals())
+console.log(sys_chord.index())
+console.log(sys_chord.quality())
