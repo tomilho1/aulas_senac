@@ -73,7 +73,7 @@ function formatChord(array_x) {
     return zeroNote(array_b)
 }
 
-// Transforma a primeira nota em zero
+// Transforma a primeira nota em zero.
 function zeroNote(array_x) {
     let id_1 = array_x[0]
     let array_b = array_x
@@ -83,15 +83,19 @@ function zeroNote(array_x) {
     return array_b
 }
 
-// Inverte acordes
-function nextInversion(array_x) {
+// Inverte acordes, tornando a nota de index "bass" a nota do baixo.
+function invertChord(array_x, bass) {
     for (step = 0; step < array_x.length; step++) {
-        if (step !== 1) {
+        if (step !== bass) {
             array_x[step] = array_x[step] + 12
         }
         else { }
     }
-    return array_x
+    const decrease = array_x[bass]
+    for (step = 0; step < array_x.length; step++) {
+        array_x[step] = array_x[step] - decrease
+    }
+    return formatChord(array_x)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,15 +103,17 @@ function nextInversion(array_x) {
 
 let chordnames =
     ["maj", "min", "dim", "aug",
-        "maj7", "min7", "sus4", "sus2",
+        "maj7", "min7", "sus4", "sus2", "lyd",
         "maj9", "min9", "maj(add9)", "min(add9)",
-        "7", "9", "7(b9)", "7sus4"]
+        "7", "9", "7(b9)", "7sus4", "maj7sus4",
+        "dim7", "min7(b5)", "dim(maj7)", "dim(b6)", "min(maj7)"]
 
 let chordlibrary =
     [[0, 4, 7], [0, 3, 7], [0, 3, 6], [0, 4, 8],
-    [0, 4, 7, 11], [0, 3, 7, 10], [0, 5, 7], [0, 2, 7],
+    [0, 4, 7, 11], [0, 3, 7, 10], [0, 5, 7], [0, 2, 7], [0, 4, 6, 7],
     [0, 2, 4, 7, 11], [0, 2, 3, 7, 10], [0, 2, 4, 7], [0, 2, 3, 7],
-    [0, 4, 7, 10], [0, 2, 4, 7, 10], [0, 1, 4, 7, 10], [0, 5, 7, 10]]
+    [0, 4, 7, 10], [0, 2, 4, 7, 10], [0, 1, 4, 7, 10], [0, 5, 7, 10], [0, 5, 7, 11],
+    [0, 3, 6, 9], [0, 3, 6, 10], [0, 3, 6, 11], [0, 3, 6, 8], [0, 3, 7, 11]]
 
 let sharp_notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
 let flat_notes = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
@@ -115,20 +121,31 @@ let flat_notes = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Definições
 
-let user_chord = [2, 6, 9]
+let user_chord = [0, 7, 11, 15]
 
-let sys_chord = formatChord(user_chord)
-intervals = getIntervals(sys_chord)
-let chord_index = librarySearch(sys_chord, chordlibrary)
-
-
+let sys_chord = {}
+sys_chord.values = formatChord(user_chord)
+sys_chord.intervals = function intervals() { return getIntervals(sys_chord.values) }
+sys_chord.index = function index() { return librarySearch(sys_chord.values, chordlibrary) }
+sys_chord.quality = function quality() { return chordnames[sys_chord.index()] }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Logs
 
-console.log("Acorde de entrada", user_chord)
-console.log("Acorde formatado", sys_chord)
-console.log("Intervalos", intervals)
+for (i = 0; i < sys_chord.values.length; i++) {
+    if (sys_chord.index() !== null) { i = i + 999999, logs() }
+    else { sys_chord.values = invertChord(sys_chord.values, 1) }
+}
 
-console.log("Index do acorde na biblioteca:", chord_index)
-console.log("Qualidade:", chordnames[chord_index])
+if (sys_chord.index() === null) {
+    console.log("Não foi possível identificar o acorde.")
+}
+else { }
+
+function logs() {
+    console.log("Acorde de entrada:", user_chord)
+    console.log("Acorde formatado:", sys_chord.values)
+    console.log("Intervalos do acorde:", sys_chord.intervals())
+    console.log("Index do acorde:", sys_chord.index())
+    console.log("Qualidade do acorde:", sys_chord.quality())
+}   
